@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 import { autobind } from 'core-decorators';
 import siteConfig from '../../../site_config/site';
@@ -18,6 +17,7 @@ const languageSwitch = [
 ];
 const noop = () => {};
 const propTypes = {
+  currentKey: PropTypes.string,
   logo: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['primary', 'normal']),
   language: PropTypes.oneOf(['en-us', 'zh-cn']),
@@ -66,7 +66,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { type, logo, onLanguageChange } = this.props;
+    const { type, logo, onLanguageChange, currentKey } = this.props;
     const { menuBodyVisible, language } = this.state;
     return (
       <header
@@ -78,9 +78,9 @@ class Header extends React.Component {
         }
       >
         <div className="header-body">
-          <Link to="/docs/installation.md">
+          <a href={`${window.rootPath}/${language}/docs/installation.html`}>
             <img className="logo" alt={siteConfig.name} title={siteConfig.name} src={logo} />
-          </Link>
+          </a>
           {
             onLanguageChange !== noop ?
             (<span
@@ -108,7 +108,7 @@ class Header extends React.Component {
             <img
               className="header-menu-toggle"
               onClick={this.toggleMenu}
-              src={type === 'primary' ? './img/system/menu_white.png' : './img/system/menu_gray.png'}
+              src={type === 'primary' ? `${window.rootPath}/img/system/menu_white.png` : `${window.rootPath}/img/system/menu_gray.png`}
             />
             <ul>
               {siteConfig[language].pageMenu.map(item => (
@@ -116,10 +116,11 @@ class Header extends React.Component {
                   className={classnames({
                     'menu-item': true,
                     [`menu-item-${type}`]: true,
-                    [`menu-item-${type}-active`]: window.location.hash.split('?')[0].slice(1).split('/')[1] === item.link.split('/')[1],
+                    [`menu-item-${type}-active`]: currentKey === item.key,
                   })}
+                  key={item.key}
                 >
-                  <Link to={item.link}>{item.text}</Link>
+                  <a href={`${window.rootPath}${item.link}`}>{item.text}</a>
                 </li>))}
             </ul>
           </div>
