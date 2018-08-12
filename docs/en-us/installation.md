@@ -1,3 +1,5 @@
+> New version 1.0.0 has been published with many new functions, the doc is coming
+
 ## Installation
 
 `docsite` is used to quickly build static sites based on markdown documents.
